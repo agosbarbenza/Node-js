@@ -3,6 +3,7 @@ const server = express();
 const bodyParser = require('body-parser');
 
 server.use(bodyParser.json());
+//server.use(validacion);
 
 server.listen(3000, ()=>{
     console.log("Servidor iniciado");
@@ -137,10 +138,22 @@ let cantantes = [
     }
 ]
 
-//Muestra el array de cantantes
-server.get('/cantantes', (req, res)=>{
-    res.json(cantantes);
-})
+let lastId = 5;
+
+function validacion(req, res, next){
+    const {nombre, apellido} = req.body;
+    if(!nombre || !apellido){
+        res.status(400).json({error: "Error! Falta info"});
+    }else{
+        if((cantantes.find((c)=> c.apellido == apellido))){
+            res.status(409).json({error: "Error! Ya existe ese cantante, pruebe con otro."})
+        }else{
+            next();
+        }
+    }
+}
+
+
 
 //Busca al cantante segun el id ingresado.
 server.get('/cantantes/:id', (req, res)=>{
@@ -148,4 +161,35 @@ server.get('/cantantes/:id', (req, res)=>{
     let cantante = cantantes.find((c)=> 
     c.id == id);
     res.json(cantante);
+})
+
+//Muestra el array de cantantes
+server.get('/cantantes', (req, res)=>{
+    res.json(cantantes);
+})
+
+//Agrega al array un nuevo cantante 
+/*server.post('/cantantes', validacion, (req, res) => {
+    let nuevoCantante = req.body;
+    lastId++;
+    nuevoCantante.id = lastId; 
+    cantantes.push(nuevoCantante);
+    console.log(cantantes);
+    res.json(cantantes);
+})*/
+
+//Busca X album de X cantante
+server.get('/cantantes/:id/albumes/:idAlbum', (req, res)=>{
+    let id = req.params.id;
+    let idAlbum = req.params.idAlbum;
+    let cantante = cantantes.find((c)=> c.id == id);
+    let idAlbumOk = parseInt(idAlbum)+1;
+    let albumCantante = cantante.albumes[idAlbum]; //Me devuelve el id -1. Cambiar para que devuelva el id correcto
+    res.json(albumCantante);
+})
+
+
+//Si se ingresa una ruta que no existe
+server.all('/*', (req, res)=>{
+    res.status(404).json("Ruta no encontrada");
 })
