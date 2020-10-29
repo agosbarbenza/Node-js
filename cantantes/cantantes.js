@@ -141,3 +141,11 @@ let cantantes = [
 server.get('/cantantes', (req, res)=>{
     res.json(cantantes);
 })
+
+//Busca al cantante segun el id ingresado.
+server.get('/cantantes/:id', (req, res)=>{
+    let id = req.params.id;
+    let cantante = cantantes.find((c)=> 
+    c.id == id);
+    res.json(cantante);
+})
