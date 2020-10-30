@@ -1,5 +1,5 @@
 const mongo = require('mongoose');
-mongo.connect('mongodb://localhost:27017/base_prueba', {useNewUrlParser: true, useUnifiedTopology: true});
+/*mongo.connect('mongodb://localhost:27017/base_prueba', {useNewUrlParser: true, useUnifiedTopology: true});*/
 
  const Users = mongo.model('Users', {
      nombre: String,
