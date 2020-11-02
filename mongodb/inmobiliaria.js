@@ -1,5 +1,19 @@
+// --------------------Conexión a Base de Datos-------------------------------//
 const mongo = require('mongoose');
 mongo.connect('mongodb://localhost:27017/bd_inmobiliaria', {useNewUrlParser: true, useUnifiedTopology: true});
+
+// -------------------------Conexión a Server-------------------------------//
+
+const express = require('express');
+const server = express();
+
+const bodyParser = require('body-parser');
+
+server.use(bodyParser.json());
+
+server.listen(3000, ()=>{
+    console.log("Servidor iniciado");
+})
 
 const Inmuebles = mongo.model('Inmuebles', {
     tipoOperacion: String,
@@ -79,3 +93,5 @@ Inmuebles.deleteOne({tipoOperacion: 'Venta'}, function(err,res){
  Inmuebles.find().then(function(resultados){
      console.log(resultados);
  });*/
+
+ 
